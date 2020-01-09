@@ -143,7 +143,8 @@ function SpotJs () {
 
   // Init Data Layer
   if (!spotjs.dataLayer) {
-    if (typeof window.spotDataLayer === 'undefined') {
+    if (typeof spotDataLayer === 'undefined') {
+      console.log("spotjs initializing spotDataLayer");
       window.spotDataLayer = [];
     }
     spotjs.dataLayer = window.spotDataLayer;
