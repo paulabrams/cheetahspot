@@ -34,8 +34,8 @@ function SpotJs () {
   let spotjs = {
     name: "spotjs 0.0.3 "+Math.random().toString(36).substring(7),
     apiConfig: {},
-    eventConfig: {},
-    cookieConfig: { 'name': 'spot_dt', 'maxage': 60*60*24*365 },
+    eventConfig: { idField: "integration_id", eventType: "web" },
+    cookieConfig: { name: 'spot_dt', maxage: 60*60*24*365 },
     dataLayer: null,
     sent: []
   }
@@ -119,13 +119,13 @@ function SpotJs () {
     }
     var evt = {
       "event": {
-        "type": data.type || spotjs.eventConfig.eventType || "web",
+        "type": data.type || spotjs.eventConfig.eventType,
         "iso_time": data.iso_time
       },
       "client": {
         "identifier": {
           "id": data.dt, 
-          "id_field": spotjs.eventConfig.idField || "integration_id"
+          "id_field": spotjs.eventConfig.idField
         }
       },
       "campaign": {

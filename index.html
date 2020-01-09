@@ -12,6 +12,9 @@
         { "type": "web" }
         ];
       console.log("static spotDataLayer =", spotDataLayer);
+      function addToCart() {
+        spotDataLayer.push( { type: "event",  } );
+      }
     </script>
 
     <!-- Spot Script -->
@@ -26,10 +29,10 @@
     <div class="container">
 
       <div class="jumbotron">
-        <h1>Spot POC - Inline</h1>
-        <p class="lead">Spot.js demo using inline code.</p>
-        <p>View page source.</p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button" id="add_to_cart">Add to Carrt</a></p>
+        <h1>Spot</h1>
+        <p class="lead">This is an inline code demo. View the page source.<./p>
+        <p>Click the button to trigger an event.</p>
+        <p><a class="btn btn-lg btn-success" href="#" role="button" onclick="addToCart">Add to Cart</a></p>
       </div>
     
     </div>
