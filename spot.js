@@ -35,8 +35,29 @@ function SpotJs () {
     name: "spotjs 0.0.3 "+Math.random().toString(36).substring(7),
     apiConfig: {},
     eventConfig: {},
+    cookieConfig: { 'name': 'spot_dt', 'maxage': 60*60*24*365 },
     dataLayer: null,
     sent: []
+  }
+
+  // Init Data Layer
+  spotjs.initDataLayer = function () {
+    if (!spotjs.dataLayer) {
+      if (typeof spotDataLayer === 'undefined') {
+        console.log("spotjs initializing empty spotDataLayer");
+        window.spotDataLayer = [];
+      }
+      else {
+        console.log("spotjs found existing spotDataLayer =", spotDataLayer);
+      }
+      console.log("spotjs extending spotDataLayer.push");
+      spotjs.dataLayer = spotDataLayer;
+      spotjs.dataLayer.push = function(e) {
+        Array.prototype.push.call(spotjs.dataLayer, e);
+        spotjs.onDataLayerPush();
+      };
+      spotjs.processDataLayer();
+    }
   }
 
   spotjs.onDataLayerPush = function () {
@@ -89,6 +110,9 @@ function SpotJs () {
   // Process a business event, such as a page visit, add to cart, etc.
   spotjs.processEvent = function (data) {
     console.log("spotjs.processEvent data =", data);
+    if (!data.dt) {
+      data.dt = spotjs.loadDeviceToken();
+    }
     if (!data.iso_time) {
       let dateobj = new Date();
       data.iso_time = dateobj.toISOString();
@@ -141,25 +165,43 @@ function SpotJs () {
     }
   }
 
-  // Init Data Layer
-  if (!spotjs.dataLayer) {
-    if (typeof spotDataLayer === 'undefined') {
-      console.log("spotjs initializing empty spotDataLayer");
-      window.spotDataLayer = [];
+  spotjs.loadDeviceToken = function () {
+    let dt = spotjs.getCookie(spotjs.cookieConfig.name);
+    if (dt === null && dt !== "NO TRACK") {
+      dt = spotjs.createDeviceToken();
     }
-    else {
-      console.log("spotjs found existing spotDataLayer =", spotDataLayer);
-    }
-    console.log("spotjs extending spotDataLayer.push");
-    spotjs.dataLayer = spotDataLayer;
-    spotjs.dataLayer.push = function(e) {
-      Array.prototype.push.call(spotjs.dataLayer, e);
-      spotjs.onDataLayerPush();
-    };
-    spotjs.processDataLayer();
+    return dt;
+  }
+  spotjs.createDeviceToken = function () {
+    let dt = spotjs.uuidv4();
+    spotjs.setCookie(spotjs.cookieConfig.name, dt, spotjs.cookieConfig);
+    return dt;
+  }
+  spotjs.getCookie = function (name) {
+    var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return v ? v[2] : null;
+  }
+  spotjs.setCookie = function (name, value, options) {
+    let c = name+'='+value;
+    c += '; SameSite=None';
+    c += '; Secure=true';
+    c += '; Max-Age='+spotjs.cookieConfig.maxage;
+    c += "; Path=/";
+    document.cookie = c;
   }
 
-  console.log (spotjs.name, "loaded");
+  // Utils
+  spotjs.uuidv4 = function () {
+   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    }
+  }
+
+
+  // Run init methods and return spotjs object
+  spotjs.initDataLayer();
+  console.log(spotjs.name, "created");
   return spotjs;
 }
 
