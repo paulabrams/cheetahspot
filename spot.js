@@ -144,10 +144,14 @@ function SpotJs () {
   // Init Data Layer
   if (!spotjs.dataLayer) {
     if (typeof spotDataLayer === 'undefined') {
-      console.log("spotjs initializing spotDataLayer");
+      console.log("spotjs initializing empty spotDataLayer");
       window.spotDataLayer = [];
     }
-    spotjs.dataLayer = window.spotDataLayer;
+    else {
+      console.log("spotjs found existing spotDataLayer =", spotDataLayer);
+    }
+    console.log("spotjs extending spotDataLayer.push");
+    spotjs.dataLayer = spotDataLayer;
     spotjs.dataLayer.push = function(e) {
       Array.prototype.push.call(spotjs.dataLayer, e);
       spotjs.onDataLayerPush();
