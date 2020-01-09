@@ -1,16 +1,19 @@
 <html>
 <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KDBNM2C');</script>
-<!-- End Google Tag Manager -->
+  <script src="spot.js" />
+  <script>
+    var spotDataLayer = [
+      { type: "apiconfig",
+        apiHost: "https://api-cust100.demostellar.com",
+        apiEndpoint: "/edp/api/event",
+        apiAuthorization: "Bearer 9d93dd6d82531de07978181313a29978bab3c4c0a3112cbe527e10cd1c3add8d:27ceca09315271167c9c88859fe02965716d7f8d844055eb354dff659cc569d9" }
+      { "type": "web" }
+      ];
+  </script>
 </head>
 
 <body>
-<h1>Spot POC</h1>
+<h1>Spot POC - Inline</h1>
 
 <h2>Step 1 - add an item to your cart</h2>
 <h3>Products</h3>
