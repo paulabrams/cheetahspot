@@ -1,38 +1,43 @@
 <html>
-<head>
-  <script>
-    var spotDataLayer = [
-      { type: "apiconfig",
-        apiHost: "https://api-cust100.demostellar.com",
-        apiEndpoint: "/edp/api/event",
-        apiAuthorization: "Bearer 9d93dd6d82531de07978181313a29978bab3c4c0a3112cbe527e10cd1c3add8d:27ceca09315271167c9c88859fe02965716d7f8d844055eb354dff659cc569d9" },
-      { "type": "web" }
-      ];
-    console.log("static spotDataLayer =", spotDataLayer);
-  </script>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" type="text/javascript" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js" type="text/javascript" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" />
 
-  <script src="spot.js" />
-</head>
+    <!-- Spot Config -->
+    <script>
+      var spotDataLayer = [
+        { type: "apiconfig",
+          apiHost: "https://api-cust100.demostellar.com",
+          apiEndpoint: "/edp/api/event",
+          apiAuthorization: "Bearer 9d93dd6d82531de07978181313a29978bab3c4c0a3112cbe527e10cd1c3add8d:27ceca09315271167c9c88859fe02965716d7f8d844055eb354dff659cc569d9" },
+        { "type": "web" }
+        ];
+      console.log("static spotDataLayer =", spotDataLayer);
+    </script>
 
-<body>
-<h1>Spot POC - Inline</h1>
+    <!-- Spot Script -->
+    <script src="spot.js" type="text/javascript" />
 
-<h2>Step 1 - add an item to your cart</h2>
-<h3>Products</h3>
-<ul>
-  <li>Soup <button id="add_to_cart">Add to Cart</button></li>
-  <li>Salad <button id="add_to_cart">Add to Cart</button></li>
-  <li>Sandwich <button id="add_to_cart">Add to Cart</button></li>
-</ul>
+  </head>
+  <body>
+    <h1>Spot POC - Inline</h1>
 
-<h2>Step 2 - go to your cart</h2>
-<p><a href="cart.html">Cart</a></p>
+    <h2>Step 1 - add an item to your cart</h2>
+    <h3>Products</h3>
+    <ul>
+      <li>Soup <button id="add_to_cart">Add to Cart</button></li>
+      <li>Salad <button id="add_to_cart">Add to Cart</button></li>
+      <li>Sandwich <button id="add_to_cart">Add to Cart</button></li>
+    </ul>
+
+    <h2>Step 2 - go to your cart</h2>
+    <p><a href="cart.html">Cart</a></p>
 
 
-<div style="padding-top:2000px"> vvv  scroll down vvv
-<h3 class="product" id="sandwich">Sandwich</h3>
- </div>
+    <div style="padding-top:2000px"> vvv  scroll down vvv
+      <h3 class="product" id="sandwich">Sandwich</h3>
+    </div>
 
-</body>
-
+  </body>
 </html>
