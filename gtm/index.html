@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html>
-<head>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -7,27 +7,57 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-KDBNM2C');</script>
 <!-- End Google Tag Manager -->
-</head>
+  <head>
+    <title>Spot POC</title>
+    <!-- Spot Config -->
+    <script>
+      var spotDataLayer = [
+        { type: "apiconfig",
+          apiHost: "https://api-cust100.demostellar.com",
+          apiEndpoint: "/edp/api/event",
+          apiAuthorization: "Bearer 9d93dd6d82531de07978181313a29978bab3c4c0a3112cbe527e10cd1c3add8d:27ceca09315271167c9c88859fe02965716d7f8d844055eb354dff659cc569d9" },
+        { "type": "web" }
+        ];
+      console.log("static spotDataLayer =", spotDataLayer);
+      function addToCart() {
+        spotDataLayer.push( { type: "event",  } );
+        alert("added to cart");
+      }
+    </script>
 
-<body>
-<h1>Spot POC - GTM</h1>
+    <!-- Spot Script -->
+    <script src="spot.js"></script>
 
-<h2>Step 1 - add an item to your cart</h2>
-<h3>Products</h3>
-<ul>
-  <li>Soup <button id="add_to_cart">Add to Cart</button></li>
-  <li>Salad <button id="add_to_cart">Add to Cart</button></li>
-  <li>Sandwich <button id="add_to_cart">Add to Cart</button></li>
-</ul>
+    <!-- not needed for Spot -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
 
-<h2>Step 2 - go to your cart</h2>
-<p><a href="cart.html">Cart</a></p>
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills float-right">
+            <li class="nav-item">
+              <a class="nav-link" href="../">Inline</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="#">GTM <span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Spot Web Tracker</h3>
+      </div>
 
-
-<div style="padding-top:2000px"> vvv  scroll down vvv
-<h3 class="product" id="sandwich">Sandwich</h3>
- </div>
-
-</body>
-
+      <div class="jumbotron">
+        <h1>Spot GTM</h1>
+        <p class="lead">This is an inline code demo. View the page source.</p>
+        <p>Click the button to trigger an event.</p>
+        <p><a class="btn btn-lg btn-success" href="#" id="add_to_cart">Add to Cart</a></p>
+      </div>
+    
+    </div>
+  </body>
 </html>
+
