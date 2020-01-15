@@ -13,11 +13,11 @@
         ];
       console.log("static spotDataLayer =", spotDataLayer);
       function triggerEvent(evt, params) {
-        let evt = {
+        let data = {
           type: evt || "event",
           eventParams: params
         };
-        spotDataLayer.push( evt );
+        spotDataLayer.push( data );
       }
     </script>
 
