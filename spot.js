@@ -23,7 +23,7 @@ function SpotJs (customConfig) {
     useNavigatorBeacon: false,
     dataLayerId: 'spotDataLayer'
   };
-  config = Object.assign(config, customConfig);
+  Object.assign(config, customConfig);
 
   let spotjs = {
     name: "spotjs 0.0.3 "+Math.random().toString(36).substring(7),
