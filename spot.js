@@ -81,7 +81,7 @@ function SpotJs (customConfig) {
 
   // Allow the tag to provide config, such as API details.
   spotjs.processConfig = function (data) {
-    console.log("spotjs.processConfig data.config =", JSON.stringify(data.configr;
+    console.log("spotjs.processConfig data.config =", JSON.stringify(data.config);
     Object.assign(config, data.config);
     console.log("spotjs.processConfig config =", config);
   }
