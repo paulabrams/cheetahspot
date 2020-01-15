@@ -12,10 +12,10 @@
         { "type": "web" }
         ];
       console.log("static spotDataLayer =", spotDataLayer);
-      function triggerEvent() {
+      function triggerEvent(evt, params) {
         let evt = {
-          type: "event",
-          eventParams: { button: this.id }
+          type: evt || "event",
+          eventParams: params
         };
         spotDataLayer.push( evt );
       }
@@ -55,9 +55,9 @@
           Each button has inline code to add an event to the data layer.
           Clicking buttons submits EDP Events.</p>
         <p>
-          <a class="btn btn-lg btn-success" href="#" id="add_to_cart" role="button" onclick="triggerEvent()">Add to Cart</a>
-          <a class="btn btn-lg btn-warning" href="#" id="remove_from_cart" role="button" onclick="triggerEvent()">Remove from Cart</a>
-          <a class="btn btn-lg btn-primary" href="#" id="cart_checkout" role="button" onclick="triggerEvent()">Checkout</a>
+          <a class="btn btn-lg btn-success" href="#" id="add_to_cart" role="button" onclick="triggerEvent('add to cart', { 'item': 'sammich' })">Add to Cart</a>
+          <a class="btn btn-lg btn-warning" href="#" id="remove_from_cart" role="button" onclick="triggerEvent('add to cart', { 'item': 'sammich' })">Remove from Cart</a>
+          <a class="btn btn-lg btn-primary" href="#" id="cart_checkout" role="button" onclick="triggerEvent('add to cart', { 'item': 'sammich' })">Checkout</a>
         </p>
       </div>
     
