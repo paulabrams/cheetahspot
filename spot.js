@@ -59,7 +59,7 @@ function SpotJs (customConfig) {
   }
 
   spotjs.processDataLayer = function () {
-    console.log("spotjs.processDataLayer dataLayer =", spotjs.dataLayer)
+    console.log("spotjs.processDataLayer dataLayer =", JSON.stringify(spotjs.dataLayer))
     if (spotjs.onDataLayerPush) {
       while (spotjs.dataLayer.length) {
         let data = spotjs.dataLayer.shift();
@@ -69,7 +69,7 @@ function SpotJs (customConfig) {
         }
         if (data) {
           if (data.config) {
-            spotjs.processConfig(data.config);
+            spotjs.processConfig(data);
           }
           if (data.type) {
             spotjs.processEvent(data);
@@ -81,8 +81,8 @@ function SpotJs (customConfig) {
 
   // Allow the tag to provide config, such as API details.
   spotjs.processConfig = function (data) {
-    console.log("spotjs.processConfig data =", data);
-    Object.assign(config, data);
+    console.log("spotjs.processConfig data.config =", JSON.stringify(data.config));
+    Object.assign(config, data.config);
     console.log("spotjs.processConfig config =", config);
   }
 
