@@ -98,13 +98,13 @@ function SpotJs (customConfig) {
     }
     var evt = {
       "event": {
-        "type": data.type || spotjs.eventConfig.eventType,
+        "type": data.type,
         "iso_time": data.iso_time
       },
       "client": {
         "identifier": {
           "id": data.dt, 
-          "id_field": spotjs.eventConfig.idField
+          "id_field": config.idField
         }
       },
       "campaign": {
