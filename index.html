@@ -12,9 +12,13 @@
         { "type": "web" }
         ];
       console.log("static spotDataLayer =", spotDataLayer);
-      function addToCart() {
-        spotDataLayer.push( { type: "event",  } );
-        alert("added to cart");
+      function triggerEvent() {
+        let evt = {
+          type: "event",
+          eventParams: { button: this.id }
+        };
+        alert("triggerEvent evt=", evt);
+        spotDataLayer.push( evt );
       }
     </script>
 
@@ -45,9 +49,13 @@
 
       <div class="jumbotron">
         <h1>Spot</h1>
-        <p class="lead">This is an inline code demo. View the page source.</p>
-        <p>Click the button to trigger an event.</p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button" onclick="addToCart()">Add to Cart</a></p>
+        <p class="lead">This is an inline code demo.
+          Each button has inline code to add an event to the data layer.
+          View the page source to see all the inline code.</p>
+        <p>Clicking buttons submits EDP Events.</p>
+        <p><a class="btn btn-lg btn-success" href="#" id="add_to_cart" role="button" onclick="triggerEvent()">Add to Cart</a></p>
+        <p><a class="btn btn-lg btn-warning" href="#" id="remove_from_cart" role="button" onclick="triggerEvent()">Remove from Cart</a></p>
+        <p><a class="btn btn-lg btn-primary" href="#" id="cart_checkout" role="button" onclick="triggerEvent()">Checkout</a></p>
       </div>
     
     </div>
