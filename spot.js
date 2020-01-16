@@ -168,6 +168,7 @@ function SpotJs () {
     c += '; Max-Age='+config.cookieMaxAge;
     c += "; Path=/";
     document.cookie = c;
+    console.log("spotjs.setCookie c=", c);
   }
 
   // Utils
