@@ -21,7 +21,8 @@ function SpotJs () {
     dtCookieName: 'spot_dt',
     cookieMaxAage: 60*60*24*365,
     useNavigatorBeacon: false,
-    dataLayerId: 'spotDataLayer'
+    dataLayerId: 'spotDataLayer',
+    debug: 1
   };
 
   let spotjs = {
@@ -31,18 +32,23 @@ function SpotJs () {
     sent: []
   };
 
+  let log = spotjs.log = function(){};
+  if (config.debug) {
+    spotjs.log = console.log.bind(window.console)
+  }
+
   // Init Data Layer
   spotjs.initDataLayer = function () {
     if (!spotjs.dataLayer) {
       // TODO - use config.dataLayerId
       if (typeof spotDataLayer === 'undefined') {
-        console.log("spotjs initializing empty spotDataLayer");
+        log("spotjs initializing empty spotDataLayer")
         window.spotDataLayer = [];
       }
       else {
-        console.log("spotjs found existing spotDataLayer =", spotDataLayer);
+        if (config.debug) console.log("spotjs found existing spotDataLayer =", spotDataLayer)
       }
-      console.log("spotjs extending spotDataLayer.push");
+      log("spotjs extending spotDataLayer.push")
       spotjs.dataLayer = spotDataLayer;
       spotjs.dataLayer.push = function(e) {
         Array.prototype.push.call(spotjs.dataLayer, e);
@@ -53,17 +59,17 @@ function SpotJs () {
   }
 
   spotjs.onDataLayerPush = function () {
-    console.log("spotjs.onDataLayerPush");
+    log("spotjs.onDataLayerPush");
     spotjs.processDataLayer();
   }
 
   spotjs.processDataLayer = function () {
-    console.log("spotjs.processDataLayer dataLayer =", JSON.stringify(spotjs.dataLayer))
+    log("spotjs.processDataLayer dataLayer =", JSON.stringify(spotjs.dataLayer))
     if (spotjs.onDataLayerPush) {
       while (spotjs.dataLayer.length) {
         let data = spotjs.dataLayer.shift();
         if (typeof data !== "object") {
-          console.log("spotjs.processDataLayer skipping non-object item", data)
+          log("spotjs.processDataLayer skipping non-object item", data)
           return;
         }
         if (data) {
@@ -81,15 +87,15 @@ function SpotJs () {
   // Allow the tag to provide config, such as API details.
   spotjs.processConfig = function (data) {
     if (typeof data === "object" && typeof data.config === "object") {
-      console.log("spotjs.processConfig data.config =", JSON.stringify(data.config));
+      log("spotjs.processConfig data.config =", JSON.stringify(data.config));
       Object.assign(config, data.config);
-      console.log("spotjs.processConfig config =", config);
+      log("spotjs.processConfig config =", config);
     }
   }
 
   // Process a business event, such as a page visit, add to cart, etc.
   spotjs.processEvent = function (data) {
-    console.log("spotjs.processEvent data =", data);
+    log("spotjs.processEvent data =", data);
     if (!data.dt) {
       data.dt = spotjs.loadDeviceToken();
     }
@@ -113,14 +119,14 @@ function SpotJs () {
         "camp_id": "1"
       }
     };
-    console.log("spotjs.processEvent evt =", evt);
+    log("spotjs.processEvent evt =", evt);
     spotjs.sendEvent(evt);
   }
 
   spotjs.sendEvent = function (evt) {
     let evtId = spotjs.sent.length+1;
     let data = JSON.stringify(evt);
-    console.log("spotjs.sendEvent evt =", evt);
+    log("spotjs.sendEvent evt =", evt);
     spotjs.sent[evtId] = { "status": "sent", "evt": evt };
     if (config.useNavigatorBeacon && navigator.sendBeacon) {
       let blob = new Blob(data, { "type": "application/json" });
@@ -132,7 +138,7 @@ function SpotJs () {
       xhr.withCredentials = true;
       xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
-          console.log(this.responseText, this);
+          log(this.responseText, this);
           //this.status = 204;
         }
       });
@@ -168,7 +174,7 @@ function SpotJs () {
     c += '; Max-Age='+config.cookieMaxAge;
     c += "; Path=/";
     document.cookie = c;
-    console.log("spotjs.setCookie c=", c);
+    log("spotjs.setCookie c=", c);
   }
 
   // Utils
@@ -182,7 +188,7 @@ function SpotJs () {
 
   // Run init methods and return spotjs object
   spotjs.initDataLayer();
-  console.log(spotjs.name, "created");
+  log(spotjs.name, "created");
   return spotjs;
 }
 
