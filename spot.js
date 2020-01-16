@@ -74,8 +74,8 @@ function SpotJs () {
           return;
         }
         if (data) {
-          if (data.config) {
-            spotjs.processConfig(data);
+          if (data.config && typeof data.config === "object") {
+            spotjs.applyConfig(data.config);
           }
           if (data.type) {
             spotjs.processEvent(data);
@@ -86,11 +86,11 @@ function SpotJs () {
   }
 
   // Allow the tag to provide config, such as API details.
-  spotjs.processConfig = function (data) {
-    if (typeof data === "object" && typeof data.config === "object") {
-      log("spotjs.processConfig data.config =", JSON.stringify(data.config));
-      Object.assign(config, data.config);
-      log("spotjs.processConfig config =", config);
+  spotjs.applyConfig = function (config2) {
+    if (typeof config2 === "object") {
+      log("spotjs.applyConfig config2 =", JSON.stringify(config2));
+      Object.assign(config, config2);
+      log("spotjs.applyConfig config =", config);
     }
   }
 
