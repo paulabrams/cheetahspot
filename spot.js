@@ -3,7 +3,7 @@
  *
  *  Spot.js is a web tracker tag
  *
- *  Spot observes window.spotDataLayer array
+ *  Spot observes window.spot_data array
  *
  */
 
@@ -21,7 +21,7 @@ function SpotJs () {
     dtCookieName: 'spot_dt',
     cookieMaxAage: 60*60*24*365,
     useNavigatorBeacon: false,
-    dataLayerId: 'spotDataLayer',
+    dataLayerId: 'spot_data',
     debug: 1
   };
 
@@ -41,16 +41,7 @@ function SpotJs () {
   // Init Data Layer
   spotjs.initDataLayer = function () {
     if (!spotjs.dataLayer) {
-      // TODO - use config.dataLayerId
-      if (typeof spotDataLayer === 'undefined') {
-        log("spotjs initializing empty spotDataLayer")
-        window.spotDataLayer = [];
-      }
-      else {
-        if (config.debug) console.log("spotjs found existing spotDataLayer =", spotDataLayer)
-      }
-      log("spotjs extending spotDataLayer.push")
-      spotjs.dataLayer = spotDataLayer;
+      spotjs.dataLayer = window[config.dataLayerId] = window[config.dataLayerId] || [];
       spotjs.dataLayer.push = function(e) {
         Array.prototype.push.call(spotjs.dataLayer, e);
         spotjs.onDataLayerPush();

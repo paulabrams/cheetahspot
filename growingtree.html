@@ -4,11 +4,11 @@
     <title>Spot Test</title>
     <script>
       // Spot Config
-      var spotDataLayer = [ { type: 'web', eventParams: { url: document.location.href } } ];
+      var spot_data = [ { type: 'web', eventParams: { url: document.location.href } } ];
 
       // add events to data layer
       function triggerEvent(evt, params) {
-        spotDataLayer.push({ type: evt || "event", eventParams: params });
+        spot_data.push({ type: evt || "event", eventParams: params });
       }
     </script>
 
@@ -62,8 +62,8 @@
           <a class="btn btn-lg btn-warning" href="#" id="remove_from_cart" role="button" onclick="triggerEvent('remove from cart', { 'item': 'sammich' })">Remove from Cart</a>
           <a class="btn btn-lg btn-primary" href="#" id="cart_checkout" role="button" onclick="triggerEvent('cart checkout', { 'item': 'sammich' })">Checkout</a>
         </p>
-        <p class="lead">The inline page code submits events by calling spotDataLayer.push(), and Spot listens for the array push.</p>
-        <code>spotDataLayer.push({ type: "web", params: { "my_data: "my test" }})</code>
+        <p class="lead">The inline page code submits events by calling spot_data.push(), and Spot listens for the array push.</p>
+        <code>spot_data.push({ type: "web", params: { "my_data: "my test" }})</code>
       </div>
     
     </div>
