@@ -8,7 +8,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KDBNM2C');</script>
 <!-- End Google Tag Manager -->
   <head>
-    <title>Spot GTM Demo</title>
+    <title>Spot Test - GTM</title>
     <!-- Spot Config -->
     <script>
       var spotDataLayer = [
@@ -49,14 +49,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </li>
           </ul>
         </nav>
-        <h3 class="text-muted">Spot</h3>
+        <h3 class="text-muted">Spot Test</h3>
       </div>
 
       <div class="jumbotron">
-        <h1>Spot GTM Demo</h1>
-        <p class="lead">This demo uses Google Tag Manager to load spot when triggers fire.
-          Each button has a different GTM trigger and tag.
-          Page View triggers by GTM. Clicking buttons submits EDP Events.</p>
+        <h1>Spot Test - GTM</h1>
+        <p class="lead">This is a test of Spot using Google Tag Manager.
+          GTM detects page load and fires a GTM trigger, which loads a Spot GTM tag.
+          GTM also detects button clicks, which similarly fire GTM triggers, which load Spot GTM tags.
+          Spot tags submit EDP Events.
+          </p>
         <p>
           <a class="btn btn-lg btn-success" href="#" id="add_to_cart" role="button" onclick="triggerEvent('add to cart', { 'item': 'sammich' })">Add to Cart</a>
           <a class="btn btn-lg btn-warning" href="#" id="remove_from_cart" role="button" onclick="triggerEvent('remove from cart', { 'item': 'sammich' })">Remove from Cart</a>
