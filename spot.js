@@ -53,13 +53,13 @@ function SpotJs () {
 
 
   // Helper function to push user info to the data layer
-  let identify = function (dt, userParams) {
-    spot.dataLayer.push({ type: 'user', 'dt': dt, 'params': userParams);
+  let identify = function (dt, params) {
+    spot.dataLayer.push({ type: 'user', 'dt': dt, 'params': params });
   }
 
   // Helper function to push an event to the data layer
-  let track = function (eventType, eventParams) {
-    spot.dataLayer.push({ type: eventType, 'params': eventParams);
+  let track = function (eventType, params) {
+    spot.dataLayer.push({ type: eventType, 'params': params });
   }
 
   let processDataLayer = function () {
