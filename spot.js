@@ -1,5 +1,5 @@
 /**
- * Spot.js 0.0.3
+ * Spot.js
  *
  *  Spot.js is a web tracker tag
  *
