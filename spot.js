@@ -25,39 +25,46 @@ function SpotJs () {
     debug: 1
   };
 
+
+  let identity = { dt: null, params: {} };
+
   let spotjs = {
     name: "spotjs 0.0.3 "+Math.random().toString(36).substring(7),
-    dataLayer: null,
     config: config,
+    identity: identity,
+    dataLayer: null,
     sent: []
   };
 
-  let log = function(){};
-  if (config.debug) {
-    log = console.log.bind(window.console)
-  }
-  spotjs.log = log;
+  // log wrapper
+  let log = spotjs.log = config.debug ? console.log.bind(window.console) : function(){};
 
   // Init Data Layer
-  spotjs.initDataLayer = function () {
+  let initDataLayer = function () {
     if (!spotjs.dataLayer) {
       spotjs.dataLayer = window[config.dataLayerId] = window[config.dataLayerId] || [];
       spotjs.dataLayer.push = function(e) {
         Array.prototype.push.call(spotjs.dataLayer, e);
-        spotjs.onDataLayerPush();
+        processDataLayer();
       };
-      spotjs.processDataLayer();
+      processDataLayer();
     }
   }
 
-  spotjs.onDataLayerPush = function () {
-    log("spotjs.onDataLayerPush");
-    spotjs.processDataLayer();
+
+  // Helper function to push user info to the data layer
+  let identify = function (dt, userParams) {
+    spot.dataLayer.push({ type: 'user', 'dt': dt, 'params': userParams);
   }
 
-  spotjs.processDataLayer = function () {
+  // Helper function to push an event to the data layer
+  let track = function (eventType, eventParams) {
+    spot.dataLayer.push({ type: eventType, 'params': eventParams);
+  }
+
+  let processDataLayer = function () {
     log("spotjs.processDataLayer dataLayer =", JSON.stringify(spotjs.dataLayer))
-    if (spotjs.onDataLayerPush) {
+    if (spotjs.dataLayer) {
       while (spotjs.dataLayer.length) {
         let data = spotjs.dataLayer.shift();
         if (typeof data !== "object") {
@@ -66,10 +73,10 @@ function SpotJs () {
         }
         if (data) {
           if (data.config && typeof data.config === "object") {
-            spotjs.applyConfig(data.config);
+            applyConfig(data.config);
           }
           if (data.type) {
-            spotjs.processEvent(data);
+            processEvent(data);
           }
         }
       }
@@ -77,7 +84,7 @@ function SpotJs () {
   }
 
   // Allow the tag to provide config, such as API details.
-  spotjs.applyConfig = function (config2) {
+  let applyConfig = function (config2) {
     if (typeof config2 === "object") {
       log("spotjs.applyConfig config2 =", JSON.stringify(config2));
       Object.assign(config, config2);
@@ -86,11 +93,12 @@ function SpotJs () {
   }
 
   // Process a business event, such as a page visit, add to cart, etc.
-  spotjs.processEvent = function (data) {
+  let processEvent = function (data) {
     log("spotjs.processEvent data =", data);
-    if (!data.dt) {
-      data.dt = spotjs.loadDeviceToken();
+    if (!data.type) {
+      log("spotjs.processEvent error - data.type is required");
     }
+   getIdentity(data);
     if (!data.iso_time) {
       let dateobj = new Date();
       data.iso_time = dateobj.toISOString();
@@ -102,7 +110,7 @@ function SpotJs () {
       },
       "client": {
         "identifier": {
-          "id": data.dt, 
+          "id": identity.dt, 
           "id_field": config.idField
         }
       },
@@ -112,10 +120,10 @@ function SpotJs () {
       }
     };
     log("spotjs.processEvent evt =", evt);
-    spotjs.sendEvent(evt);
+    sendEvent(evt);
   }
 
-  spotjs.sendEvent = function (evt) {
+  let sendEvent = function (evt) {
     let evtId = spotjs.sent.length+1;
     let data = JSON.stringify(evt);
     log("spotjs.sendEvent evt =", evt);
@@ -143,23 +151,29 @@ function SpotJs () {
     }
   }
 
-  spotjs.loadDeviceToken = function () {
-    let dt = spotjs.getCookie(config.dtCookieName);
-    if (dt === null && dt !== "NO TRACK") {
-      dt = spotjs.createDeviceToken();
+  // Identity (Device Token)
+  let getIdentity = function (data) {
+    if (!identity.dt) {
+      if (data && data.dt) {
+        identity.dt = data.dt;
+      }
+      else {
+        identity.dt = getCookie(config.dtCookieName);
+      }
+      if (identity.dt === null && dt !== "NO TRACK") {
+        identity.dt = uuidv4();
+      }
+      setCookie(config.dtCookieName, identity.dt, config);
     }
-    return dt;
   }
-  spotjs.createDeviceToken = function () {
-    let dt = spotjs.uuidv4();
-    spotjs.setCookie(config.dtCookieName, dt, config);
-    return dt;
-  }
-  spotjs.getCookie = function (name) {
+
+  // Utils
+  let getCookie = function (name) {
     var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
     return v ? v[2] : null;
   }
-  spotjs.setCookie = function (name, value, options) {
+
+  let setCookie = function (name, value, options) {
     let c = name+'='+value;
     c += '; SameSite=None';
     c += '; Secure=true';
@@ -169,17 +183,21 @@ function SpotJs () {
     log("spotjs.setCookie c=", c);
   }
 
-  // Utils
-  spotjs.uuidv4 = function () {
+  let uuidv4 = function () {
    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }
 
+  // Interface methods
+  spot.applyConfig = applyConfig;
+  spot.identify = identify;
+  spot.track = track;
 
   // Run init methods and return spotjs object
-  spotjs.initDataLayer();
+  initDataLayer();
+
   log(spotjs.name, "created");
   return spotjs;
 }
