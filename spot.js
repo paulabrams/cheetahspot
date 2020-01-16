@@ -10,7 +10,7 @@
 //
 // Implementation
 //
-function SpotJs (customConfig) {
+function SpotJs () {
 
   let config = {
     apiContentType: 'application/json',
@@ -23,7 +23,6 @@ function SpotJs (customConfig) {
     useNavigatorBeacon: false,
     dataLayerId: 'spotDataLayer'
   };
-  Object.assign(config, customConfig);
 
   let spotjs = {
     name: "spotjs 0.0.3 "+Math.random().toString(36).substring(7),
@@ -81,9 +80,11 @@ function SpotJs (customConfig) {
 
   // Allow the tag to provide config, such as API details.
   spotjs.processConfig = function (data) {
-    console.log("spotjs.processConfig data.config =", JSON.stringify(data.config));
-    Object.assign(config, data.config);
-    console.log("spotjs.processConfig config =", config);
+    if (typeof data === "object" && typeof data.config === "object") {
+      console.log("spotjs.processConfig data.config =", JSON.stringify(data.config));
+      Object.assign(config, data.config);
+      console.log("spotjs.processConfig config =", config);
+    }
   }
 
   // Process a business event, such as a page visit, add to cart, etc.
@@ -185,5 +186,5 @@ function SpotJs (customConfig) {
 }
 
 if (!window.spotjs) {
-  window.spotjs = SpotJs({ customConfig: 0 });
+  window.spotjs = SpotJs();
 }
