@@ -57,6 +57,8 @@
           <a class="btn btn-lg btn-warning" href="#" id="remove_from_cart" role="button" onclick="triggerEvent('remove from cart', { 'item': 'sammich' })">Remove from Cart</a>
           <a class="btn btn-lg btn-primary" href="#" id="cart_checkout" role="button" onclick="triggerEvent('cart checkout', { 'item': 'sammich' })">Checkout</a>
         </p>
+        <p class="lead">The inline page code submits events by calling spotDataLayer.push(), and Spot listens for the array push.</p>
+        <code>spotDataLayer.push({ type: "web", params: { "my_data: "my test" }})</code>
       </div>
     
     </div>
