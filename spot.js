@@ -32,10 +32,11 @@ function SpotJs () {
     sent: []
   };
 
-  let log = spotjs.log = function(){};
-  if (config.debug) {
-    spotjs.log = console.log.bind(window.console)
+  let log = function(){};
+  if (!config.debug) {
+    log = console.log.bind(window.console)
   }
+  spotjs.log = log;
 
   // Init Data Layer
   spotjs.initDataLayer = function () {
