@@ -29,7 +29,7 @@ function SpotJs () {
   let identity = { dt: null, params: {} };
 
   let spotjs = {
-    name: "spotjs 0.0.3 "+Math.random().toString(36).substring(7),
+    name: "spotjs 0.0.5 "+Math.random().toString(36).substring(7),
     config: config,
     identity: identity,
     dataLayer: null,
