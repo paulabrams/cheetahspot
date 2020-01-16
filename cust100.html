@@ -35,13 +35,13 @@
         <nav>
           <ul class="nav nav-pills float-right">
             <li class="nav-item">
-              <a class="nav-link active" href="index.html">Home</a>
+              <a class="nav-link" href="index.html">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="cust100.html">Cust100</a>
+              <a class="nav-link active" href="cust100.html">Cust100</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="gtm/">GTM</a>
+              <a class="nav-link" href="gtm.html">GTM</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="growingtree.html">GrowingTree</a>
@@ -52,8 +52,15 @@
       </div>
 
       <div class="jumbotron">
-        <h1>Spot Test</h1>
-        <p class="lead">This is a set of tests for Spot. Use the top nav to choose a test.
+        <h1>Spot Test - Inline Code</h1>
+        <p class="lead">This is a test of Spot using inline code. View page source to see the code.
+          Each button has inline code to add an event to the data layer.
+          Spot detects updates to the data layer and submits EDP Events.
+        </p>
+        <p>
+          <a class="btn btn-lg btn-success" href="#" id="add_to_cart" role="button" onclick="triggerEvent('add to cart', { 'item': 'sammich' })">Add to Cart</a>
+          <a class="btn btn-lg btn-warning" href="#" id="remove_from_cart" role="button" onclick="triggerEvent('remove from cart', { 'item': 'sammich' })">Remove from Cart</a>
+          <a class="btn btn-lg btn-primary" href="#" id="cart_checkout" role="button" onclick="triggerEvent('cart checkout', { 'item': 'sammich' })">Checkout</a>
         </p>
       </div>
     
