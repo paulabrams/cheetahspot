@@ -191,9 +191,9 @@ function SpotJs () {
   }
 
   // Interface methods
-  spot.applyConfig = applyConfig;
-  spot.identify = identify;
-  spot.track = track;
+  spotjs.applyConfig = applyConfig;
+  spotjs.identify = identify;
+  spotjs.track = track;
 
   // Run init methods and return spotjs object
   initDataLayer();
