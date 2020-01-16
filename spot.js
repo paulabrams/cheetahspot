@@ -33,7 +33,7 @@ function SpotJs () {
   };
 
   let log = function(){};
-  if (!config.debug) {
+  if (config.debug) {
     log = console.log.bind(window.console)
   }
   spotjs.log = log;
