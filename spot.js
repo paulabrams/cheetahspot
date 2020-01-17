@@ -160,7 +160,7 @@ function SpotJs () {
       else {
         identity.dt = getCookie(config.dtCookieName);
       }
-      if (identity.dt === null && dt !== "NO TRACK") {
+      if (identity.dt === null && identity.dt !== "NO TRACK") {
         identity.dt = uuidv4();
       }
       setCookie(config.dtCookieName, identity.dt, config);
