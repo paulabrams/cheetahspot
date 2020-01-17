@@ -4,11 +4,11 @@
     <title>Spot Test</title>
     <script>
       // Spot Config
-      var spot_data = [ { type: 'web', eventParams: { url: document.location.href } } ];
+      var spot_data = [ { type: 'web', params: { url: document.location.href } } ];
 
       // add events to data layer
       function triggerEvent(evt, params) {
-        spot_data.push({ type: evt || "event", eventParams: params });
+        spot_data.push({ type: evt || "event", params: params });
       }
     </script>
 
