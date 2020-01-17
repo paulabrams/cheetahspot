@@ -54,7 +54,7 @@ function SpotJs () {
 
   // Helper function to push user info to the data layer
   let identify = function (dt, params) {
-    spot.dataLayer.push({ type: 'user', 'dt': dt, 'params': params });
+    spot.dataLayer.push({ type: 'identity', 'dt': dt, 'params': params });
   }
 
   // Helper function to push an event to the data layer
