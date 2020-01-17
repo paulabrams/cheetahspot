@@ -138,8 +138,7 @@ function SpotJs () {
       xhr.withCredentials = true;
       xhr.addEventListener("readystatechange", function() {
         if(this.readyState === 4) {
-          log(this.responseText, this);
-          //this.status = 204;
+          //log(this.responseText, this);
         }
       });
       xhr.open("POST", config.apiHost+config.apiEndpoint, true);
