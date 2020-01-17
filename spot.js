@@ -98,26 +98,17 @@ function SpotJs () {
     if (!data.type) {
       log("spotjs.processEvent error - data.type is required");
     }
-   getIdentity(data);
+    getIdentity(data);
     if (!data.iso_time) {
       let dateobj = new Date();
       data.iso_time = dateobj.toISOString();
     }
+    data.params = data.params || {};
+    data.campaign = data.campaign || { "ext_parent_id": "1", "camp_id": "1" };
     var evt = {
-      "event": {
-        "type": data.type,
-        "iso_time": data.iso_time
-      },
-      "client": {
-        "identifier": {
-          "id": identity.dt, 
-          "id_field": config.idField
-        }
-      },
-      "campaign": {
-        "ext_parent_id": "1",
-        "camp_id": "1"
-      }
+      "event": { "type": data.type, "iso_time": data.iso_time, "params": data.params },
+      "client": { "identifier": { "id": identity.dt, "id_field": config.idField } },
+      "campaign": data.campaign 
     };
     log("spotjs.processEvent evt =", evt);
     sendEvent(evt);
@@ -153,16 +144,19 @@ function SpotJs () {
   // Identity (Device Token)
   let getIdentity = function (data) {
     if (!identity.dt) {
+      let dtCookie = '';
       if (data && data.dt) {
         identity.dt = data.dt;
       }
       else {
-        identity.dt = getCookie(config.dtCookieName);
+        identity.dt = dtCookie = getCookie(config.dtCookieName);
       }
       if (identity.dt === null && identity.dt !== "NO TRACK") {
         identity.dt = uuidv4();
       }
-      setCookie(config.dtCookieName, identity.dt, config);
+      if (dtCookie !== identity.dt) {
+        setCookie(config.dtCookieName, identity.dt, config);
+      }
     }
   }
 
