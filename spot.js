@@ -18,7 +18,7 @@ function SpotJs () {
     apiEndpoint: '/edp/api/event',
     apiAuthorization: 'Bearer 7ed9828b0021035c22f1b142db14704bc4eb95b11f93d973bd9c9b698cf736e4:3e1824ff3ec2d7e2e20c13fa00d60d4dbc4a965d5fd48a1f4887338759c1d8e7:6d228e44e479cca02776f2d8b5a0f191e09a0e0fe7bdfa84b7a43152820d9403',
     dtCookieName: 'spot_dt',
-    dtCookieName: 'spot_dt',
+    idField: 'integration_id',
     cookieMaxAage: 60*60*24*365,
     useNavigatorBeacon: false,
     dataLayerId: 'spot_data',
