@@ -29,7 +29,7 @@ function SpotJs () {
   };
 
 
-  let user = { dt: null, ut: null, visitor: null, optin: null, optout: null, attribs: {} };
+  let user = { dt: null, ut: null, visitor: null, optIn: null, optOut: null, attribs: {} };
 
   let spotjs = {
     name: "spotjs 0.0.5 "+Math.random().toString(36).substring(7),
@@ -65,6 +65,24 @@ function SpotJs () {
       Object.assign(user, user2);
     }
     spot.dataLayer.push({ "type": "identify", "params": user2 });
+  }
+
+  let optIn = function () {
+    user.optIn = true;
+    user.optOut = false;
+    if (user.dt === "OPTOUT") {
+      setCookie(config.dtCookieName, "", config);
+    }
+    if (user.ut === "OPTOUT") {
+      setCookie(config.utCookieName, "", config);
+    }
+  }
+  
+  let optOut = function () {
+    user.optIn = false;
+    user.optOut = true;
+    setCookie(config.dtCookieName, "OPTOUT", config);
+    setCookie(config.utCookieName, "OPTOUT", config);
   }
 
   let processDataLayer = function () {
@@ -161,7 +179,12 @@ function SpotJs () {
       else {
         user.dt = dtCookie = getCookie(config.dtCookieName);
       }
-      if (user.dt === null && user.dt !== "OPTOUT") {
+      if (user.dt === null && user.dt === "OPTOUT") {
+        // tracking opt-out
+        user.optOut = true;
+      }
+      else {
+        // create device token
         user.dt = uuidv4();
       }
       if (user.dt && user.dt !== dtCookie) {
@@ -181,7 +204,8 @@ function SpotJs () {
         user.ut = utCookie = getCookie(config.utCookieName);
       }
       if (user.ut === "OPTOUT") {
-        // TODO - handle tracking opt-out
+        //  tracking opt-out
+        user.optOut = true;
       }
       if (user.dt && user.ut !== utCookie) {
         setCookie(config.utCookieName, user.ut, config);
