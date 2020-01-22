@@ -25,11 +25,12 @@ function SpotJs () {
     cookieMaxAge: 60*60*24*365,
     useNavigatorBeacon: false,
     dataLayerId: 'spot_data',
+    defaultCampaign: { "ext_parent_id": "1", "camp_id": "1" },
     debug: 1
   };
 
 
-  let user = { dt: null, ut: null, visitor: null, optIn: null, optOut: null, attribs: {} };
+  let user = { dt: null, ut: null, known: null, visitor: null, optIn: null, optOut: null, update_attributes: {} };
 
   let spotjs = {
     name: "spotjs 0.0.5 "+Math.random().toString(36).substring(7),
@@ -123,21 +124,26 @@ function SpotJs () {
     if (!data.type) {
       log("spotjs.processEvent error - data.type is required");
     }
-    getDeviceToken(data);
-    getUserToken(data);
+    processUser(data);
     if (!data.iso_time) {
       let dateobj = new Date();
       data.iso_time = dateobj.toISOString();
     }
-    data.params = data.params || {};
-    data.campaign = data.campaign || { "ext_parent_id": "1", "camp_id": "1" };
-    data.update_attributes = data.update_attributes || { "visitor": "true" };
     var evt = {
-      "event": { "type": data.type, "iso_time": data.iso_time, "params": data.params },
-      "client": { "identifier": { "id": user.dt, "id_field": config.dtIdField } },
-      "campaign": data.campaign ,
-      "callback": { "update_attributes": data.update_attributes }
+      "event": { "type": data.type, "iso_time": data.iso_time },
+      "client": { identifier: { "id": user.known ? user.ut : user.dt, "id_field": user.known ? config.dtIdfield : config.utIdField }} },
+      "campaign": data.campaign || config.defaultCampaign
     };
+    if (Object.keys(data.params).length) {
+      evt.event.params_json = data.params;
+    }
+    data.update_attributes = data.update_attributes || {};
+    Object.apply(data.update_attributes, user.update_attributes);
+    if (data.update_attributes.visitor === undefined && user.visitor !== null) {
+      data.update_attributes.visitor = user.visitor;
+    if (Object.keys(data.update_attributes).length) {
+      evt.callback = { "update_attributes": data.update_attributes };
+    }
     log("spotjs.processEvent evt =", evt);
     sendEvent(evt);
   }
@@ -169,51 +175,47 @@ function SpotJs () {
     }
   }
 
-  // Device Token - anonymous id of the device (browser/client)
-  let getDeviceToken = function (data) {
-    if (!user.dt) {
-      let dtCookie = '';
-      if (data && data.dt) {
-        user.dt = data.dt;
-      }
-      else {
-        user.dt = dtCookie = getCookie(config.dtCookieName);
-      }
-      if (user.dt === null && user.dt === "OPTOUT") {
-        // tracking opt-out
+  let processUser = function (data) {
+    getTokenCookie("dt", true, data);
+    getTokenCookie("ut", false, data);
+    if (user.ut) { // known
+      user.known = true;
+      user.visitor = null;
+      if (user.ut === "OPTOUT") {
         user.optOut = true;
       }
-      else {
-        // create device token
-        user.dt = uuidv4();
-      }
-      if (user.dt && user.dt !== dtCookie) {
-        setCookie(config.dtCookieName, user.dt, config);
+    }
+    else { // anonymous
+      user.known = false;
+      user.visitor = true;
+      if (user.dt === "OPTOUT") {
+        user.optOut = true;
       }
     }
   }
 
-  // User Token
-  let getUserToken = function (data) {
-    if (!user.ut) {
-      let utCookie = '';
-      if (data && data.ut) {
-        user.ut = data.ut;
-      }
-      else {
-        user.ut = utCookie = getCookie(config.utCookieName);
-      }
-      if (user.ut === "OPTOUT") {
-        //  tracking opt-out
-        user.optOut = true;
-      }
-      if (user.dt && user.ut !== utCookie) {
-        setCookie(config.utCookieName, user.ut, config);
-      }
-    }
-  }
 
   // Utils
+  let getTokenCookie = function (token, generate, data) {
+    let cookieName = config[token+'CookieName'], 
+        cookieVal = getCookie(cookieName);
+    if (!user[token]) {
+      if (typeof data === "object" && data[token]) {
+        user[token] = data[token];
+      }
+      else if (cookieVal) {
+        user[token] = cookieVal;
+      }
+      if (!user[token] && generate) {
+        // generate token
+        user[token] = uuidv4();
+      }
+    }
+    if (user[token] !== cookieVal) {
+      setCookie(cookieName, user[token], config);
+    }
+  }
+
   let getCookie = function (name) {
     var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
     return v ? v[2] : null;
