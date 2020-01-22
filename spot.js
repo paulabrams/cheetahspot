@@ -17,8 +17,11 @@ function SpotJs () {
     apiHost: 'https://growingtree.demostellar.com',
     apiEndpoint: '/edp/api/event',
     apiAuthorization: 'Bearer 7ed9828b0021035c22f1b142db14704bc4eb95b11f93d973bd9c9b698cf736e4:3e1824ff3ec2d7e2e20c13fa00d60d4dbc4a965d5fd48a1f4887338759c1d8e7:6d228e44e479cca02776f2d8b5a0f191e09a0e0fe7bdfa84b7a43152820d9403',
+    cookiePrefix: 'spot_',
     dtCookieName: 'spot_dt',
-    idField: 'integration_id',
+    utCookieName: 'spot_ut',
+    dtIdField: 'integration_id', // TODO - use device_id or visitor_id? Also update GTM template.
+    utIdField: 'integration_id', // TODO
     cookieMaxAge: 60*60*24*365,
     useNavigatorBeacon: false,
     dataLayerId: 'spot_data',
@@ -26,12 +29,12 @@ function SpotJs () {
   };
 
 
-  let identity = { dt: null, params: {} };
+  let user = { dt: null, ut: null, visitor: null, optin: null, optout: null, attribs: {} };
 
   let spotjs = {
     name: "spotjs 0.0.5 "+Math.random().toString(36).substring(7),
     config: config,
-    identity: identity,
+    user: user,
     dataLayer: null,
     sent: []
   };
@@ -51,15 +54,17 @@ function SpotJs () {
     }
   }
 
-
-  // Helper function to push user info to the data layer
-  let identify = function (dt, params) {
-    spot.dataLayer.push({ type: 'identity', 'dt': dt, 'params': params });
-  }
-
   // Helper function to push an event to the data layer
   let track = function (eventType, params) {
-    spot.dataLayer.push({ type: eventType, "params": params });
+    spot.dataLayer.push({ "type": eventType, "params": params });
+  }
+
+  // Helper function to push user info to the data layer
+  let identify = function (user2) {
+    if (typeof user2 === "object") {
+      Object.assign(user, user2);
+    }
+    spot.dataLayer.push({ "type": "identify", "params": user2 });
   }
 
   let processDataLayer = function () {
@@ -88,6 +93,8 @@ function SpotJs () {
     if (typeof config2 === "object") {
       log("spotjs.applyConfig config2 =", JSON.stringify(config2));
       Object.assign(config, config2);
+      config.dtCookieName = config.cookiePrefix+'dt';
+      config.utCookieName = config.cookiePrefix+'ut';
       log("spotjs.applyConfig config =", config);
     }
   }
@@ -98,17 +105,20 @@ function SpotJs () {
     if (!data.type) {
       log("spotjs.processEvent error - data.type is required");
     }
-    getIdentity(data);
+    getDeviceToken(data);
+    getUserToken(data);
     if (!data.iso_time) {
       let dateobj = new Date();
       data.iso_time = dateobj.toISOString();
     }
     data.params = data.params || {};
     data.campaign = data.campaign || { "ext_parent_id": "1", "camp_id": "1" };
+    data.update_attributes = data.update_attributes || { "visitor": "true" };
     var evt = {
       "event": { "type": data.type, "iso_time": data.iso_time, "params": data.params },
-      "client": { "identifier": { "id": identity.dt, "id_field": config.idField } },
-      "campaign": data.campaign 
+      "client": { "identifier": { "id": user.dt, "id_field": config.dtIdField } },
+      "campaign": data.campaign ,
+      "callback": { "update_attributes": data.update_attributes }
     };
     log("spotjs.processEvent evt =", evt);
     sendEvent(evt);
@@ -141,21 +151,40 @@ function SpotJs () {
     }
   }
 
-  // Identity (Device Token)
-  let getIdentity = function (data) {
-    if (!identity.dt) {
+  // Device Token - anonymous id of the device (browser/client)
+  let getDeviceToken = function (data) {
+    if (!user.dt) {
       let dtCookie = '';
       if (data && data.dt) {
-        identity.dt = data.dt;
+        user.dt = data.dt;
       }
       else {
-        identity.dt = dtCookie = getCookie(config.dtCookieName);
+        user.dt = dtCookie = getCookie(config.dtCookieName);
       }
-      if (identity.dt === null && identity.dt !== "NO TRACK") {
-        identity.dt = uuidv4();
+      if (user.dt === null && user.dt !== "OPTOUT") {
+        user.dt = uuidv4();
       }
-      if (dtCookie !== identity.dt) {
-        setCookie(config.dtCookieName, identity.dt, config);
+      if (user.dt && user.dt !== dtCookie) {
+        setCookie(config.dtCookieName, user.dt, config);
+      }
+    }
+  }
+
+  // User Token
+  let getUserToken = function (data) {
+    if (!user.ut) {
+      let utCookie = '';
+      if (data && data.ut) {
+        user.ut = data.ut;
+      }
+      else {
+        user.ut = utCookie = getCookie(config.utCookieName);
+      }
+      if (user.ut === "OPTOUT") {
+        // TODO - handle tracking opt-out
+      }
+      if (user.dt && user.ut !== utCookie) {
+        setCookie(config.utCookieName, user.ut, config);
       }
     }
   }
