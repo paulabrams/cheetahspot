@@ -131,7 +131,7 @@ function SpotJs () {
     }
     var evt = {
       "event": { "type": data.type, "iso_time": data.iso_time },
-      "client": { identifier: { "id": user.known ? user.ut : user.dt, "id_field": user.known ? config.dtIdfield : config.utIdField }} },
+      "client": { identifier: { "id": user.known ? user.ut : user.dt, "id_field": user.known ? config.dtIdfield : config.utIdField } },
       "campaign": data.campaign || config.defaultCampaign
     };
     if (Object.keys(data.params).length) {
