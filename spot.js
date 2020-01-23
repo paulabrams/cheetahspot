@@ -131,9 +131,11 @@ function SpotJs () {
     }
     var evt = {
       "event": { "type": data.type, "iso_time": data.iso_time },
-      "client": { identifier: { "id": user.known ? user.ut : user.dt, "id_field": user.known ? config.dtIdfield : config.utIdField } },
+      "client": { "identifier": { "id": "", "id_field": "" } },
       "campaign": data.campaign || config.defaultCampaign
     };
+    evt.client.identifier.id = user.known ? user.ut : user.dt;
+    evt.client.identifier.id_field = user.known ? config.dtIdfield : config.utIdField;
     if (Object.keys(data.params).length) {
       evt.event.params_json = data.params;
     }
@@ -141,6 +143,7 @@ function SpotJs () {
     Object.apply(data.update_attributes, user.update_attributes);
     if (data.update_attributes.visitor === undefined && user.visitor !== null) {
       data.update_attributes.visitor = user.visitor;
+    }
     if (Object.keys(data.update_attributes).length) {
       evt.callback = { "update_attributes": data.update_attributes };
     }
