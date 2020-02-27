@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spot Test</title>
+
+    <!-- Sample of custom inline code -->
+    <script>
+      // Optionally set config options
+      var spot_config = {
+        apiHost: "https://growingtree.demostellar.com",
+        apiAuth: "Bearer 7ed9828b0021035c22f1b142db14704bc4eb95b11f93d973bd9c9b698cf736e4:3e1824ff3ec2d7e2e20c13fa00d60d4dbc4a965d5fd48a1f4887338759c1d8e7" };
+      // Initialize data layer so events can be pushed even before spot.js loads
+      var spot_data = [];
+      // Create a convenience funtion to push events
+      function pushEvent(evt) {
+        spot_data.push(evt);
+      }
+      // Push config to data layer
+      //pushEvent({ "config": { apiHost: "https://growingtree.demostellar.com", apiAuth: "Bearer 7ed9828b0021035c22f1b142db14704bc4eb95b11f93d973bd9c9b698cf736e4:3e1824ff3ec2d7e2e20c13fa00d60d4dbc4a965d5fd48a1f4887338759c1d8e7" } });
+      //pushEvent({ apiHost: "https://api-cust100.demostellar.com", apiAuth: "Bearer 9d93dd6d82531de07978181313a29978bab3c4c0a3112cbe527e10cd1c3add8d:27ceca09315271167c9c88859fe02965716d7f8d844055eb354dff659cc569d9" });
+      // Push a web visit event to the data layer
+      pushEvent({ "event": 'visit_web_page', "params": { "url": document.location.href, "referrer": document.referrer } });
+
+      // Define some events I want to capture
+      var customEvents = {
+        "browse_product":   { "event": "browse_product", "params": { 'item': 'sammich' } },
+        "add_to_cart":      { "event": "add_to_cart", "params": { 'item': 'sammich' } },
+        "view_cart":        { "event": "view_cart", "params": { 'item': 'sammich' } },
+        "remove_from_cart": { "event": "remove_from_cart", "params": { 'item': 'sammich' }, "after": "afterRemoveFromCart" },
+        "cart_checkout":    { "event": "checkout_cart", "params": { 'item': 'sammich' }, "before": "beforeCartCheckout", "after": "afterCartCheckout", "cancel": "cancelCartCheckout" },
+        "identify":         { "event": "identify", "params": { 'ut': 'Paul000002_usrtok', 'uta': 'user_token' } },
+        "email_identify":   { "event": "identify", "params": { 'ut': 'paul@example.com', 'uta': 'email' }, "after": "afterSignin" },
+        "update_name":      { "event": "update", "params": { }, "after": "afterUpdateName", "update_attributes": { "first_name": "Paul" } },
+        "update_address":   { "event": "update", "params": { }, "update_attributes": { "mailing_city": "San Mateo", "mailing_state": "CA" } },
+        "signin":           { "event": "signin", "params": { 'ut': 'Paul000001_intid', 'uta': 'integration_id', "first_name": "Paul" } },
+        "signout":          { "event": "signout" },
+        "optin":            { "event": "optin" },
+        "optout":           { "event": "optout" }
+      }
+
+      function afterRemoveFromCart (data) { alert("item removed"); }
+      function beforeCartCheckout (data) { return confirm("confirm checkout") }
+      function afterCartCheckout (data) { alert("thanks for your purchase!") }
+      function cancelCartCheckout (data) { alert("items will remain in your cart for 24 hours") }
+      function afterSignin (data) { alert("Welcome!") }
+      function afterUpdateName (data) { alert("Welcome"+data.update_attributes.first_name+"!") }
+
+      // Trigger on button click
+      document.addEventListener('click', function (event) {
+        if (event.target.matches('.btn')) {
+          event.preventDefault();
+          console.log("custom button click id =", event.target.id, event.target);
+          let evt = customEvents[event.target.id];
+          if (!evt) {
+            evt = { "event": event.target.id };
+          }
+          pushEvent(evt);
+        }
+      }, false);
+
+    </script>
+    <!-- End sample code -->
+
+    <!-- Spot Script -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'spot.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://cheetahspot.github.io/tag/dev/spot.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','SPOT-000001');</script>
+    <!-- End Spot Script -->
+
+    <!-- make the page look nice -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://v4-alpha.getbootstrap.com/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://v4-alpha.getbootstrap.com/examples/narrow-jumbotron/narrow-jumbotron.css">
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills float-right">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="gtm.html">GTM</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="inline.html">Inline</a>
+            </li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Spot Test</h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Spot Test - Inline</h1>
+        <p class="lead">This is a set of tests for Spot using simple inline code. View page source to see the code.</p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Visitors</h1>
+        <p class="lead">Spot automatically creates a unique device_token for the browser on first visit.
+        This is stored in the "spot_dt" cookie and will identify the device even if the user is subsequently identified.
+        A device token is a unique 128-bit number generated UUID (generated as uuidv4) such as "4d8f9e7a-3ccb-4b2b-8297-6372fd3bdfe0".
+        The cookie max age is set to the Spot cookieMaxAge config setting, which defaults to 2 months.</p>
+        <p class="lead">Spot also generates a random UUID session_token for the browsing session.
+        The cookie max age is set to the Spot sessionLength config setting, which defaults to 30 minutes. </p>
+        <p class="lead">You can use Spot to submit an Event such as "visit web page", by pushing the event to the data layer:</p>
+        <p><code>spot_data.push({ "event":"visit_web_page", params: { url: "{url}", referrer: "{referrer}", user_agent: "{useragent}"} })</code></p>
+        <p><code>spot_data.push({ "event":"browse_product", params: { url: "{url}", items: [ "162224", "118423" ]} })</code></p>
+        <p class="lead">All Events submitted include the device_token and session_token.</p>
+        <p class="lead">Spot does not automatically submit any events, only those you create.</p>
+        <p class="lead">An anonymous event for a device_token will result in a new member record.</p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>User Identification</h1>
+        <p class="lead">If a user signs in or is otherwise identified, the identifier is stored in the "spot_ut" cookie, and "identify" event is submitted matching the user identifier to the device_token. The user identifier will be used for events instead of device_token. All EDP identity fields are supported, except as noted below.</p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="#" id="identify" role="button" onclick="">Identify</a>
+          <a class="btn btn-lg btn-success" href="#" id="signin" role="button" onclick="">Sign in</a>
+        </p>
+        <p class="lead">Email is not specifically not allowed as an identifier out of respect for user privacy.
+        An identifier that appears to be an email address will not be across the network or stored as a cookie.
+        </p>
+        <p>
+          <a class="btn btn-lg btn-info" href="#" id="email_identify" role="button" onclick="">Email Identify</a>
+        </p>
+        <p class="lead">The Event payload can include attribute values to update, such as "what should we call you?".
+        </p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="#" id="update_name" role="button" onclick="">Update Name</a>
+          <a class="btn btn-lg btn-success" href="#" id="update_address" role="button" onclick="">Update Address</a>
+        </p>
+        <p class="lead">The user token cookie is cleared (set to "") on a "signout" event.</p>
+        <p>
+          <a class="btn btn-lg btn-warning" href="#" id="signout" role="button">Sign out</a>
+        </p>
+        <p class="lead">A "spot_user" querystring parameter or javascript variable can be used to identify the user.
+        The value of spot_user is a JSON object with parameters "ut" ("user_token") and optionally "uta" (defaults to "user_token").
+        The value can be base64 encoded or plain text.</p>
+        <p>Querystring parameter "spot_user":</p>
+        <p><a href='?spot_user={"ut":"4d8f9e7a-3ccb-4b2b-8297-6372fd3bdfe0"}'>?spot_user={"ut":"4d8f9e7a-3ccb-4b2b-8297-6372fd3bdfe0"}</a></p>
+        <p><a href='?spot_user=eyJ1dCI6IjRkOGY5ZTdhLTNjY2ItNGIyYi04Mjk3LTYzNzJmZDNiZGZlMCJ9'>?spot_user=eyJ1dCI6IjRkOGY5ZTdhLTNjY2ItNGIyYi04Mjk3LTYzNzJmZDNiZGZlMCJ9</a></p>
+        <p><a href='?spot_user={"ut":"INT00001","uta":"integration_id"}'>?spot_user={"ut":"INT00001","uta":"integration_id"}</a></p>
+        <p><a href='?spot_user={"ut":"INT99999","uta":"integration4_id"}'>?spot_user={"ut":"INT99999","uta":"integration4_id"}</a></p>
+        <p>Querystring parameters "spot_ut" and "spot_uta":</p>
+        <p><a href='?spot_ut=4d8f9e7a-3ccb-4b2b-8297-6372fd3bdfe0'>?ut=4d8f9e7a-3ccb-4b2b-8297-6372fd3bdfe0</a></p>
+        <p><a href='?spot_ut=INT00001&spot_uta=integration_id'>?ut=INT00001&uta=integration_id</a></p>
+        <p>JavaScript variable:</p>
+        <p><code>var spot_user = {"ut":"4d8f9e7a-3ccb-4b2b-8297-6372fd3bdfe0"};</code></p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Abandoned Cart</h1>
+        <p class="lead">Click buttons to trigger events to test an "abandoned cart" scenario.
+          Each button pushes an event onto the data layer.
+          Spot detects updates to the data layer and submits EDP Events.
+          Some of the buttons define Spot callback functions for "before", "after", and "cancel".
+        </p>
+        <p>
+          <a class="btn btn-lg btn-info" href="#" id="browse_product" role="button">Browse Product</a>
+          <a class="btn btn-lg btn-primary" href="#" id="add_to_cart" role="button">Add to Cart</a>
+        </p>
+        <p>
+          <a class="btn btn-lg btn-info" href="#" id="view_cart" role="button">View Cart</a>
+          <a class="btn btn-lg btn-warning" href="#" id="remove_from_cart" role="button">Remove from Cart</a>
+          <a class="btn btn-lg btn-success" href="#" id="cart_checkout" role="button">Checkout</a>
+        </p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Managing User Consent</h1>
+        <p class="lead">
+        Spot supports user consent to tracking, using a "Do Not Track" cookie.
+        </p>
+        <p>
+          <a class="btn btn-lg btn-success" href="#" id="optin" role="button">Optin</a>
+          <a class="btn btn-lg btn-warning" href="#" id="optout" role="button">Optout</a>
+        </p>
+        <p>
+        Tracking is enabled by default.
+        An optin or optout Event out sets a Do Not Track cookie "spot_dnt".  Optin sets "spot_dnt=0", and Optout sets "spot_dnt=1".  </p>
+        <p>If Do Not Track is enabled ("spot_dnt=1") Events are blocked and not sent to the server. Optin/optout does not affect other cookies.  </p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Cookies</h1>
+        <p class="lead">Spot sets a small number of cookies, listed below.
+        All Spot cookies are first-party and not sent to Cheetah servers.</p>
+        <h3>Device Token ("spot_dt")</h3>
+        <p class="lead">
+          Spot generates a random UUID device_token for the browser. The value is a randomly generated unique 128-bit number (generated as uuidv4) such as "4d8f9e7a-3ccb-4b2b-8297-6372fd3bdfe0". All events submitted include the device token.</p>
+        <h3>Session Token ("spot_st")</h3>
+        <p class="lead">
+          Spot generates a random UUID device_token for the browser session. The cookie max age is set to the Spot config.sessionLength setting, which default to one hour. All Events submitted include the session token.</p>
+        <h3>User Token ("spot_ut")</h3>
+        <p class="lead">
+          Spot can read a user_token from the querystring or javascript variable.
+          The recommended usage is the EDP user_token attribute, which is a random UUID not based on the member_id or customer db id
+          In addition, Spot also supports any standard EDP identifier field (e.g. integration_id), in which case the value might not be a UUID.</p>
+        <h3>User Token Attribute ("spot_uta")</h3>
+        <p class="lead">
+          This cookie associates the User Token value with an EDP member attribute. The standard EDP member attribute for storing a device token is "user_token", but any other identifier field can be used, such as: integration_id, integration2_id, email, etc.</p>
+        <h3>Do Not Track ("spot_dnt")</h3>
+        <p class="lead">
+          Spot preserves user's optin or optout choice by setting a Do Not Track cookie "spot_dnt=1". Optin sets "spot_dnt=0", and Optout sets "spot_dnt=1".
+          If Do Not Track is enabled ("spot_dnt=1") Events are blocked and not sent to the server. </p>
+        </p>
+        <h4>Obviously Personal Information</h4>
+        <p class="lead">
+        Spot attempts to detect obviously personal information such as email addresses and will avoid saving those into cookies.
+        So if a customer were to send an email address as the user_token in a querystring parameter (which is not recommended but technically possible),
+        Spot would use the value for submitting events but never store it as a cookie.</p>
+      </div>
+    
+    </div>
+  </body>
+</html>
